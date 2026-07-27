@@ -1,0 +1,43 @@
+# plataforma/crds/xrd-servico-app.yaml
+apiVersion: apiextensions.crossplane.io/v2
+kind: CompositeResourceDefinition
+metadata:
+  name: xservicosapp.plataforma.idp
+spec:
+  group: plataforma.idp
+  scope: Cluster
+  defaultCompositionRef:
+    name: servico-app-ministack
+  names:
+    kind: XServicoApp
+    plural: xservicosapp
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                parametros:
+                  type: object
+                  properties:
+                    nomeServico:
+                      type: string
+                      pattern: '^[a-z][a-z0-9-]{2,30}$'
+                    ambiente:
+                      type: string
+                      enum: ["dev", "staging", "prod"]
+                    retencaoLogsDias:
+                      type: integer
+                      minimum: 7
+                      maximum: 365
+                      default: 30
+                  required:
+                    - nomeServico
+                    - ambiente
+              required:
+                - parametros

@@ -1,0 +1,79 @@
+# plataforma/crds/composition-servico-app.yaml
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: servico-app-ministack
+  labels:
+    provider: ministack
+spec:
+  compositeTypeRef:
+    apiVersion: plataforma.idp/v1alpha1
+    kind: XServicoApp
+  mode: Pipeline
+  pipeline:
+    - step: patch-and-transform
+      functionRef:
+        name: function-patch-and-transform
+      input:
+        apiVersion: pt.fn.crossplane.io/v1beta1
+        kind: Resources
+        resources:
+          - name: bucket-artefatos
+            base:
+              apiVersion: s3.aws.upbound.io/v1beta1
+              kind: Bucket
+              spec:
+                forProvider:
+                  region: us-east-1
+                providerConfigRef:
+                  name: ministack
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parametros.nomeServico
+                toFieldPath: metadata.annotations[crossplane.io/external-name]
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s-artefatos"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parametros.nomeServico
+                toFieldPath: metadata.name
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s-bucket-artefatos"
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.labels[backstage.io/kubernetes-id]
+                toFieldPath: metadata.labels[backstage.io/kubernetes-id]
+
+          - name: bucket-logs
+            base:
+              apiVersion: s3.aws.upbound.io/v1beta1
+              kind: Bucket
+              spec:
+                forProvider:
+                  region: us-east-1
+                providerConfigRef:
+                  name: ministack
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parametros.nomeServico
+                toFieldPath: metadata.annotations[crossplane.io/external-name]
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s-logs"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parametros.nomeServico
+                toFieldPath: metadata.name
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s-bucket-logs"
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.labels[backstage.io/kubernetes-id]
+                toFieldPath: metadata.labels[backstage.io/kubernetes-id]
