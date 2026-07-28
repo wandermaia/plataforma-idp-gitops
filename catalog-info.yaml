@@ -1,0 +1,18 @@
+# packages/backend/templates/servico-app/skeleton/catalog-info.yaml
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: api-inventario
+  description: API REST para gestão de inventário de e-commerce
+  annotations:
+    github.com/project-slug: wandermaia/plataforma-idp-gitops # SUBSTITUA 'SEU_USUARIO' PELO SEU USUÁRIO DO GITHUB
+    backstage.io/kubernetes-id: api-inventario
+  labels:
+    ambiente: dev
+  tags:
+    - dev
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/time-backend
+  system: plataforma-idp
