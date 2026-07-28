@@ -1,0 +1,16 @@
+# packages/backend/templates/servico-app/skeleton/times/dev/api-inventario.yaml
+apiVersion: plataforma.idp/v1alpha1
+kind: XServicoApp
+metadata:
+  name: api-inventario
+  labels:
+    backstage.io/kubernetes-id: api-inventario
+    ambiente: dev
+  annotations:
+    plataforma.idp/owner: group:default/time-backend
+    plataforma.idp/descricao: API REST para gestão de inventário de e-commerce
+spec:
+  parametros:
+    nomeServico: api-inventario
+    ambiente: dev
+    retencaoLogsDias: 90
